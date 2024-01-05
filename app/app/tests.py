@@ -7,7 +7,6 @@ from app import calc
 from django.test import SimpleTestCase
 
 
-
 class TestAddFunc(SimpleTestCase):
 
     def tester_adding(self):
