@@ -11,4 +11,3 @@ def func_add(x, y):
 def func_subtract(x, y):
 
     return x-y
-
