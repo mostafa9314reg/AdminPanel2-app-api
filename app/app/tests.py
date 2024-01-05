@@ -18,3 +18,4 @@ class TestAddFunc(SimpleTestCase):
     def tester_subtracting(self):
         res = calc.func_subtract(5,5)
         self.assertEqual(res,0)
+
