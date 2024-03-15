@@ -2,14 +2,19 @@
 Django command to wait for databases to be available.
 """
 
-from typing import Any
+import time
+
+from psycopg2 import OperationalError as Psycopg2OpError
+
+from django.db.utils import OperationalError
 from django.core.management.base import BaseCommand
+
 
 
 class Command(BaseCommand):
     "django command to wait for db"
 
-    def handle(self, *args: Any, **options: Any) :    
+    def handle(self, *args ,**options) :    
         # return super().handle(*args, **options)
         """Entrypoint for command."""
         self.stdout.write('Waiting for database...')
