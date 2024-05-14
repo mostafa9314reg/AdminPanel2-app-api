@@ -164,7 +164,7 @@ class PrivateUserApiTests(TestCase):
     def test_authenticated_user_change_info_me(self):
         """test if authenticated user can change user info in me endpoint"""
 
-        payload = {'name': 'Updated name', 'password': 'newpassword123'}
+        payload = {'name': 'Updated name', 'password': 'newpassword123' }
 
         res = self.client.patch(ME_URL, payload)
 
