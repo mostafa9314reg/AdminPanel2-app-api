@@ -47,3 +47,4 @@ class MyUserAdmin(BaseUserAdmin):
 
 
 admin.site.register(models.User,MyUserAdmin)
+admin.site.register(models.Accounts)

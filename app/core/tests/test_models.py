@@ -5,6 +5,7 @@ Tests for models
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from core import models
 
 
 class ModelTests(TestCase):
@@ -50,3 +51,17 @@ class ModelTests(TestCase):
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    def test_creat_account(self):
+        account = models.Accounts.objects.create(
+            pcode = 1234,
+            extension = '4321',
+            callerid = 'test1',
+            mailbox = 'test@example.com',
+            level = 'test',
+            secret = 'test1234',
+            server = 'testserv',
+            enable = 1
+
+        )
+        self.assertEqual(str(account),account.extension)
