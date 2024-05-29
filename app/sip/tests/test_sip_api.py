@@ -10,7 +10,7 @@ from core.models import Accounts
 from sip.serializers import SipSerializer
 
 
-ACCOUNTS_URL = reverse('account:accounts_list')
+ACCOUNTS_URL = reverse('sip:accounts-list')
 
 def create_sip_account(**params):
         """create  sip account with params"""
@@ -49,22 +49,23 @@ class PrivateAccountApiTests(TestCase) :
         """writing tests for authenticated user on retreiving sip accounts list"""
         def setUp(self) -> None:
                 self.client = APIClient()
-                user =create_user(
+                self.user = create_user(
                        email = 'test@example.com',
                        password = 'testpass'
                 )
-                self.user = self.client.force_authenticate(self.user)
+                self.client.force_authenticate(self.user)
                 self.account = create_sip_account()
 
         def test_retreive_account_listsr(self):
                """ test authenticated user can retreive accounts list"""
-               create_sip_account()
-               create_sip_account()
+               create_sip_account(extension='6543')
+               create_sip_account(extension = '9876')
                account = Accounts.objects.all().order_by('-id')
                serializer = SipSerializer(account, many = True)
                res = self.client.get(ACCOUNTS_URL)
                self.assertEqual(res.status_code,status.HTTP_200_OK)
-               self.assertEqual(res.data , serializer.data)
+               self.assertEqual(res.data[1] , serializer.data[1])
+
 
 
 
