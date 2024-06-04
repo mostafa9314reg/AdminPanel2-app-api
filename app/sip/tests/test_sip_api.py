@@ -7,10 +7,17 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 from core.models import Accounts
-from sip.serializers import SipSerializer
+from sip.serializers import (
+    SipSerializer,
+    SipDetailSerializer
+)
 
 
 ACCOUNTS_URL = reverse('sip:accounts-list')
+
+def account_detail_url(account_id):
+
+        return reverse('sip:account-detail',args=[account_id])
 
 def create_sip_account(**params):
         """create  sip account with params"""
@@ -57,16 +64,23 @@ class PrivateAccountApiTests(TestCase) :
                 self.account = create_sip_account()
 
         def test_retreive_account_listsr(self):
-               """ test authenticated user can retreive accounts list"""
+               """ test user can retreive accounts list"""
                create_sip_account(extension='6543')
                create_sip_account(extension = '9876')
-               account = Accounts.objects.all().order_by('-id')
+        #        account = Accounts.objects.all().order_by('-id')
+               account = Accounts.objects.all()
                serializer = SipSerializer(account, many = True)
                res = self.client.get(ACCOUNTS_URL)
                self.assertEqual(res.status_code,status.HTTP_200_OK)
-               self.assertEqual(res.data[1] , serializer.data[1])
+               self.assertEqual(res.data , serializer.data)
 
-
+        def test_retreive_account_detail(self):
+                """ test user can see account detail"""
+                account = create_sip_account(extension = '7654')
+                serializer = SipDetailSerializer(account)
+                detail_url = account_detail_url(account.id)
+                # res = self.client.get(detail_url)
+                self.assertEqual(res.data,serializer)
 
 
 
