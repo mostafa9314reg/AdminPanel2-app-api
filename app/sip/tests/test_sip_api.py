@@ -17,7 +17,7 @@ ACCOUNTS_URL = reverse('sip:accounts-list')
 
 def account_detail_url(account_id):
 
-        return reverse('sip:account-detail',args=[account_id])
+        return reverse('sip:accounts-detail',args=[account_id])
 
 def create_sip_account(**params):
         """create  sip account with params"""
@@ -79,8 +79,8 @@ class PrivateAccountApiTests(TestCase) :
                 account = create_sip_account(extension = '7654')
                 serializer = SipDetailSerializer(account)
                 detail_url = account_detail_url(account.id)
-                # res = self.client.get(detail_url)
-                self.assertEqual(res.data,serializer)
+                res = self.client.get(detail_url)
+                self.assertEqual(res.data,serializer.data)
 
 
 
