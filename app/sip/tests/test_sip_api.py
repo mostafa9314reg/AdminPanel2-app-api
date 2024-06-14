@@ -83,6 +83,77 @@ class PrivateAccountApiTests(TestCase) :
                 self.assertEqual(res.data,serializer.data)
 
 
+        def test_create_account(self):
+                """create sip acount api test"""
+                payload ={
+            'pcode' : 1334,
+            'extension' : '5321',
+            'callerid' : 'test1',
+            'mailbox' : 'test@example.com',
+            'level' : 'test',
+            'secret' : 'test1234',
+            'server' : 'testserv',
+            'enable' : 1,
+        }
+                res = self.client.post(ACCOUNTS_URL,payload)
+                self.assertEqual(res.status_code,status.HTTP_201_CREATED)
+
+                for key,value in payload.items() :
+                        self.assertEqual(getattr(res,key),value)
+
+        def test_create_account_email_exist_error(self):
+                """creat sip account withe duplicate email record error returns"""
+                payload = {
+            'pcode' : 1334,
+            'extension' : '6543',
+            'callerid' : 'test1',
+            'mailbox' : 'test@example.com',
+            'level' : 'test',
+            'secret' : 'test1234',
+            'server' : 'testserv',
+            'enable' : 1
+                }
+                create_sip_account(extension='5463',mailbox = 'test@example.com')
+                res = self.client.post(ACCOUNTS_URL,payload)
+                accout_exist = Accounts.objects.filter(mailbox = payload['mailbox']).exists
+                self.assertFalse(accout_exist)
+                self.assertEqual(res.status_code,status.HTTP_400_BAD_REQUEST)
+
+        def test_create_account_secret_blank_bad_request_error(self):
+                """test returns error if secret is blank in creation"""
+                payload = {
+            'pcode' : 1334,
+            'extension' : '7543',
+            'callerid' : 'test1',
+            'mailbox' : 'test@example2.com',
+            'level' : 'test',
+            'secret' : '',
+            'server' : 'testserv',
+            'enable' : 1
+                }
+                res = self.client.post(ACCOUNTS_URL,payload)
+                accout_exist = Accounts.objects.filter(mailbox = payload['mailbox']).exists
+                self.assertFalse(accout_exist)
+                self.assertEqual(res.status_code,status.HTTP_400_BAD_REQUEST)
+
+
+        def test_create__account_too_short_secret_error(self):
+                """test returns error if secret is too short"""
+                payload = {
+            'pcode' : 1334,
+            'extension' : '8543',
+            'callerid' : 'test1',
+            'mailbox' : 'test@example2.com',
+            'level' : 'test',
+            'secret' : '123',
+            'server' : 'testserv',
+            'enable' : 1
+                }
+                res = self.client.post(ACCOUNTS_URL,payload)
+                accout_exist = Accounts.objects.filter(mailbox = payload['mailbox']).exists
+                self.assertFalse(accout_exist)
+                self.assertEqual(res.status_code,status.HTTP_400_BAD_REQUEST)
+
 
 
 
