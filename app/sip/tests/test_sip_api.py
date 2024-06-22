@@ -14,6 +14,7 @@ from sip.serializers import (
 
 
 ACCOUNTS_URL = reverse('sip:accounts-list')
+# ACCOUNTS_CREATE_URL = reverse('sip:create')
 
 def account_detail_url(account_id):
 
@@ -89,7 +90,7 @@ class PrivateAccountApiTests(TestCase) :
             'pcode' : 1334,
             'extension' : '5321',
             'callerid' : 'test1',
-            'mailbox' : 'test@example.com',
+            'mailbox' : 'test7@example.com',
             'level' : 'test',
             'secret' : 'test1234',
             'server' : 'testserv',
@@ -97,9 +98,9 @@ class PrivateAccountApiTests(TestCase) :
         }
                 res = self.client.post(ACCOUNTS_URL,payload)
                 self.assertEqual(res.status_code,status.HTTP_201_CREATED)
-
+                account = Accounts.objects.get(id=res.data['id'])
                 for key,value in payload.items() :
-                        self.assertEqual(getattr(res,key),value)
+                        self.assertEqual(getattr(account,key),value)
 
         def test_create_account_email_exist_error(self):
                 """creat sip account withe duplicate email record error returns"""
@@ -107,16 +108,16 @@ class PrivateAccountApiTests(TestCase) :
             'pcode' : 1334,
             'extension' : '6543',
             'callerid' : 'test1',
-            'mailbox' : 'test@example.com',
+            'mailbox' : 'test8@example.com',
             'level' : 'test',
             'secret' : 'test1234',
             'server' : 'testserv',
             'enable' : 1
                 }
-                create_sip_account(extension='5463',mailbox = 'test@example.com')
+                create_sip_account(extension='5463',mailbox = 'test8@example.com')
                 res = self.client.post(ACCOUNTS_URL,payload)
-                accout_exist = Accounts.objects.filter(mailbox = payload['mailbox']).exists
-                self.assertFalse(accout_exist)
+                account_exist = Accounts.objects.filter(mailbox = payload['extension']).exists()
+                self.assertFalse(account_exist)
                 self.assertEqual(res.status_code,status.HTTP_400_BAD_REQUEST)
 
         def test_create_account_secret_blank_bad_request_error(self):
@@ -132,8 +133,8 @@ class PrivateAccountApiTests(TestCase) :
             'enable' : 1
                 }
                 res = self.client.post(ACCOUNTS_URL,payload)
-                accout_exist = Accounts.objects.filter(mailbox = payload['mailbox']).exists
-                self.assertFalse(accout_exist)
+                account_exist = Accounts.objects.filter(mailbox = payload['mailbox']).exists()
+                self.assertFalse(account_exist)
                 self.assertEqual(res.status_code,status.HTTP_400_BAD_REQUEST)
 
 
@@ -150,8 +151,8 @@ class PrivateAccountApiTests(TestCase) :
             'enable' : 1
                 }
                 res = self.client.post(ACCOUNTS_URL,payload)
-                accout_exist = Accounts.objects.filter(mailbox = payload['mailbox']).exists
-                self.assertFalse(accout_exist)
+                account_exist = Accounts.objects.filter(mailbox = payload['mailbox']).exists()
+                self.assertFalse(account_exist)
                 self.assertEqual(res.status_code,status.HTTP_400_BAD_REQUEST)
 
 
