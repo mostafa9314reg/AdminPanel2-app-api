@@ -5,7 +5,7 @@ from rest_framework.routers import DefaultRouter
 from sip import views
 
 router = DefaultRouter()
-router2 = DefaultRouter()
+# router2 = DefaultRouter()
 router.register(r'accounts', views.SipVeiwSet)
 # router2.register(r'create', views.SipCreateVeiwSet)
 

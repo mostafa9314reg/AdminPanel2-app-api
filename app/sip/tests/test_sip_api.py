@@ -178,6 +178,39 @@ class PrivateAccountApiTests(TestCase) :
                 self.assertEqual(res.status_code,status.HTTP_200_OK)
                 self.assertEqual(account.mailbox ,payload['mailbox'])
 
+        def test_accout_full_update(self):
+                """test full update on account"""
+
+                account =create_sip_account(
+                        pcode = 3244,
+                        extension = 6644,
+                        callerid = 'test',
+                        mailbox = 'test@example5.com',
+                        level = 'test',
+                        secret = '1234',
+                        server = 'server1',
+                        enable = 1
+
+                )
+                payload = {
+                        'pcode' : 1334,
+                        'extension' : '9744',
+                        'callerid' : 'test1',
+                        'mailbox' : 'test6@example.com',
+                        'level' : 'test',
+                        'secret' : '123',
+                        'server' : 'testserv',
+                        'enable' : 1
+                }
+                url = account_detail_url(account.id)
+                res = self.client.put(url,payload)
+                account.refresh_from_db()
+                self.assertEqual(res.status_code,status.HTTP_200_OK)
+                for key,value in payload.items() :
+                        self.assertEqual(getattr(account,key),value)
+
+
+
 
 
 
