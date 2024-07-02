@@ -155,6 +155,29 @@ class PrivateAccountApiTests(TestCase) :
                 self.assertFalse(account_exist)
                 self.assertEqual(res.status_code,status.HTTP_400_BAD_REQUEST)
 
+        def test_account_partial_update(self):
+                """test partial update on account"""
+
+                account =create_sip_account(
+                        pcode = 3244,
+                        extension = 6644,
+                        callerid = 'test',
+                        mailbox = 'test@example5.com',
+                        level = 'test',
+                        secret = '1234',
+                        server = 'server1',
+                        enable = 1
+
+                )
+                payload = {
+                        'mailbox':'test6@example.com'
+                }
+                url = account_detail_url(account.id)
+                res = self.client.patch(url,payload)
+                account.refresh_from_db()
+                self.assertEqual(res.status_code,status.HTTP_200_OK)
+                self.assertEqual(account.mailbox ,payload['mailbox'])
+
 
 
 
