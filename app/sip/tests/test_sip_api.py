@@ -209,6 +209,24 @@ class PrivateAccountApiTests(TestCase) :
                 for key,value in payload.items() :
                         self.assertEqual(getattr(account,key),value)
 
+        def test_account_delete(self):
+                """test delete account successfull"""
+                account =create_sip_account(
+                        pcode = 3244,
+                        extension = 9944,
+                        callerid = 'test',
+                        mailbox = 'test@example5.com',
+                        level = 'test',
+                        secret = '1234',
+                        server = 'server1',
+                        enable = 1
+
+                )
+                url = account_detail_url(account.id)
+                res = self.client.delete(url)
+                self.assertEqual(res.status_code,status.HTTP_204_NO_CONTENT)
+                self.assertFalse(Accounts.objects.filter(id=account.id).exists())
+
 
 
 
